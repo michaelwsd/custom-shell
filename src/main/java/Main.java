@@ -5,7 +5,7 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-        Set<String> commands = new HashSet<>(Set.of("exit", "echo"));
+        Set<String> commands = new HashSet<>(Set.of("exit", "echo", "type"));
 
         while (true) {
             System.out.print("$ ");
