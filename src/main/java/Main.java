@@ -1,4 +1,6 @@
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,6 +24,11 @@ public class Main {
             } else if (line.startsWith("type ")) {
                 String command = line.substring(5);
                 runType(command);  
+            } else if (line.equals("pwd")) {
+                Path currentRelativePath = Paths.get("");
+                String s = currentRelativePath.toAbsolutePath().toString();
+                System.out.println(s);
+
             } else {
                 // check for program and run 
                 String[] input = line.split(" ");
