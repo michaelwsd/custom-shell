@@ -11,7 +11,7 @@ public class Executor {
         if (path == null) return false;
 
         List<String> cmd = new ArrayList<>();
-        cmd.add(path);          // FIX: use full path
+        cmd.add(program);
         cmd.addAll(Arrays.asList(input).subList(1, input.length));
 
         try {
