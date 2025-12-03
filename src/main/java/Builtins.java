@@ -1,7 +1,4 @@
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
 
 public class Builtins {
@@ -25,8 +22,7 @@ public class Builtins {
         }
 
         if (line.equals("pwd")) {
-            Path p = Paths.get("").toAbsolutePath();
-            System.out.println(p);
+            System.out.println(currentDir.getAbsolutePath());
             return true;
         }
 

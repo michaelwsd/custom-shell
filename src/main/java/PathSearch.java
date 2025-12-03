@@ -2,8 +2,7 @@ import java.io.File;
 
 public class PathSearch {
 
-    private static final String[] dirs =
-            System.getenv("PATH").split(File.pathSeparator);
+    private static final String[] dirs = System.getenv("PATH").split(File.pathSeparator);
 
     private static final String[] winExt = {
         ".exe", ".cmd", ".bat"
