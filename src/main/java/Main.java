@@ -1,19 +1,25 @@
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
+        Set<String> commands = new HashSet<>(Set.of("exit", "echo"));
 
         while (true) {
             System.out.print("$ ");
-            String command = scanner.nextLine();
+            String line = scanner.nextLine();
 
-            if (command.equals("exit")) {
+            if (line.equals("exit")) {
                 break;
-            } else if (command.startsWith("echo") && command.charAt(4) == ' ') {
-                System.out.println(command.substring(5));
+            } else if (line.startsWith("echo ")) {
+                System.out.println(line.substring(5));
+            } else if (line.startsWith("type ") && commands.contains(line.substring(5))) {
+                String command = line.substring(5);
+                System.out.println(command + " is a shell builtin");
             } else {
-                System.out.println(command + ": command not found");
+                System.out.println(line + ": command not found");
             }
         }
 
