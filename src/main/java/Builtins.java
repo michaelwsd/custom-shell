@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Builtins {
 
-    private static File currentDir = new File(System.getProperty("user.dir"));
+    private static File currentDir = new File(".").getAbsoluteFile();
     private static File homeDir = new File(System.getenv("USERPROFILE"));
     private static List<String> historyList = new ArrayList<>();
 
