@@ -19,7 +19,7 @@ public class Builtins {
         
         // add to history
         historyList.add(line);
-        
+
         if (command == null) return false;
 
         switch (command) {
@@ -39,17 +39,28 @@ public class Builtins {
                 runCd(args.isEmpty() ? "~" : args);
             }
             case history -> {
-                runHistory();
+                runHistory(args);
             }
         }
 
         return true; // not a builtin
     }
 
-    public static void runHistory() {
-        int i = 1;
-        for (String cmd: historyList) {
-            System.out.printf("%5d  %s%n", i++, cmd);
+    public static void runHistory(String args) {
+        try {
+            int number = Integer.parseInt(args);
+            if (number >= historyList.size()) printHistory(1);
+            else {
+                printHistory(historyList.size() - number + 1);
+            }
+        } catch (NumberFormatException e) {
+            printHistory(1);
+        }
+    }
+
+    public static void printHistory(int start) {
+        for (int i = start-1; i < historyList.size(); i++) {
+            System.out.printf("%5d  %s%n", start++, historyList.get(i));
         }
     }
 
