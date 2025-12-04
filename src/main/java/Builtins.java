@@ -2,11 +2,14 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Builtins {
 
     private static File currentDir = new File(System.getProperty("user.dir"));
     private static File homeDir = new File(System.getenv("USERPROFILE"));
+    private static List<String> historyList = new ArrayList<>();
 
     // returns true if a builtin handled the line
     public static boolean runCommand(String line) {
@@ -15,6 +18,9 @@ public class Builtins {
         String args = parts.length > 1 ? parts[1] : "";
         
         if (command == null) return false;
+
+        // add to history
+        historyList.add(parts[0]);
 
         switch (command) {
             case exit -> {
@@ -32,9 +38,19 @@ public class Builtins {
             case cd -> {
                 runCd(args.isEmpty() ? "~" : args);
             }
+            case history -> {
+                runHistory();
+            }
         }
 
         return true; // not a builtin
+    }
+
+    public static void runHistory() {
+        int i = 1;
+        for (String cmd: historyList) {
+            System.out.printf("%5d  %s%n", i++, cmd);
+        }
     }
 
     public static void runCd(String dir) {

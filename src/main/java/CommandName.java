@@ -3,7 +3,8 @@ enum CommandName {
     echo,
     type,
     pwd,
-    cd;
+    cd,
+    history;
 
     static CommandName of(String name) {
         try {
