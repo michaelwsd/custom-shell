@@ -222,10 +222,11 @@ public class Builtins {
     }
 
     public static void runType(String cmd) {
-        if (cmd == "cat") {
+        if (cmd.equals("cat")) {
             System.out.println("cat is /bin/cat");
+            return;
         }
-        
+
         CommandName command = CommandName.of(cmd);
         if (command != null) {
             System.out.println(cmd + " is a shell builtin");
