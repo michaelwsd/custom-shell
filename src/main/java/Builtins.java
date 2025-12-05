@@ -32,7 +32,7 @@ public class Builtins {
                 System.exit(0);
             }
             case echo -> {
-                System.out.println(args);
+                System.out.println(args.replace("'", ""));
             }
             case pwd -> {
                 System.out.println(currentDir.getAbsolutePath());
@@ -69,14 +69,14 @@ public class Builtins {
         StringBuilder combinedOutput = new StringBuilder();
         String[] files = args.split("\\s+");
     
-        for (String file : files) {
+        for (String file: files) {
             Path p = Paths.get(file);
     
             try {
                 byte[] info = Files.readAllBytes(p);
                 String content = new String(info);
     
-                // print to stdout (this may be redirected)
+                // print to stdout 
                 System.out.print(content);
     
                 combinedOutput.append(content);
