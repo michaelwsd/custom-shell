@@ -93,6 +93,9 @@ public class Builtins {
 
     public static boolean handleRedirection(String line) {
         String[] parts = line.split(">", 2);
+
+        if (parts.length != 2) return false;
+
         String command = parts[0].trim(), fileName = parts[1].trim();
 
         if (command.endsWith("1")) {
@@ -121,7 +124,7 @@ public class Builtins {
             System.err.println("redirection error: " + e.getMessage());
         }
 
-        return false;
+        return true;
     }
 
     public static File[] runLs(String args) {
@@ -132,7 +135,7 @@ public class Builtins {
                 listFiles(files);
                 return files;
             } else {
-                System.err.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
             }
         } else {
             File givenDir = new File(args);
@@ -141,7 +144,7 @@ public class Builtins {
                 listFiles(files);
                 return files;
             } else {
-                System.err.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
             }
         }
 
