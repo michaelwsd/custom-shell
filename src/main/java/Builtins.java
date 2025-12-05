@@ -12,7 +12,7 @@ import java.util.List;
 public class Builtins {
 
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static File homeDir = new File(System.getenv("HOME"));
+    private static File homeDir = new File(System.getProperty("user.home"));
     private static List<String> historyList = new ArrayList<>();
 
     // returns true if a builtin handled the line
@@ -96,34 +96,54 @@ public class Builtins {
         if (parts.length != 2) return false;
 
         String command = parts[0].trim(), fileName = parts[1].trim();
-
-        if (command.endsWith("1")) {
+        File outputFile = new File(fileName);
+        PrintStream chosenStream = command.endsWith("2") ? System.err : System.out;
+        OutputType type = command.endsWith("2") ? OutputType.err : OutputType.out;
+        
+        // allow command starting wiht 1
+        if (command.endsWith("1") || command.endsWith("2")) {
             command = command.substring(0, command.length()-1).trim();
         }
 
-        File outputFile = new File(fileName);
+        redirectOutput(chosenStream, command, type, outputFile);
 
-        PrintStream originalOutput = System.out;
+        return true;
+    }
+
+    public static void redirectOutput(PrintStream output, String command, OutputType type, File outputFile) {
+        // create a temp buffer to store output
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(buffer)); // print output to buffer instead of terminal 
+
+        // print output/error to buffer instead of terminal
+        switch (type) {
+            case out -> {
+                System.setOut(new PrintStream(buffer));
+            }
+            case err -> {
+                System.setErr(new PrintStream(buffer));
+            }
+        }
 
         // run command
         boolean handled = runCommand(command);
-        if (!handled) {
-            Executor.runProgram(command);
+        if (!handled) Executor.runProgram(command);
+
+        // reset stream
+        switch (type) {
+            case out -> {
+                System.setOut(output);
+            }
+            case err -> {
+                System.setErr(output);
+            }
         }
 
-        // restore original output
-        System.setOut(originalOutput);
-
-        // write to file 
+        // write to file
         try {
             Files.write(outputFile.toPath(), buffer.toByteArray());
         } catch (Exception e) {
             System.err.println("redirection error: " + e.getMessage());
         }
-
-        return true;
     }
 
     public static void runLs(String args) {
