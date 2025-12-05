@@ -52,9 +52,9 @@ public class Builtins {
             case clear -> {
                 Main.clearScreen();
             }
-            case cat -> {
-                runCat(args);
-            }
+            // case cat -> {
+            //     runCat(args);
+            // }
         }
 
         return true; 
