@@ -12,7 +12,7 @@ import java.util.List;
 public class Builtins {
 
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static File homeDir = new File(System.getProperty("user.home"));
+    private static File homeDir = new File(System.getenv("HOME"));
     private static List<String> historyList = new ArrayList<>();
 
     // returns true if a builtin handled the line
@@ -237,7 +237,7 @@ public class Builtins {
         if (Files.exists(newPath) && Files.isDirectory(newPath)) {
             currentDir = newPath.toFile();
         } else {
-            System.out.println("cd: " + dir + ": No such file or directory");
+            System.err.println("cd: " + dir + ": No such file or directory");
         }
     }
 
@@ -258,7 +258,7 @@ public class Builtins {
         if (found != null) {
             System.out.println(cmd + " is " + found);
         } else {
-            System.out.println(cmd + ": not found");
+            System.err.println(cmd + ": not found");
         }
     }
 }
