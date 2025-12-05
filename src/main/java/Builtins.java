@@ -1,5 +1,6 @@
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -59,10 +60,10 @@ public class Builtins {
         return true; 
     }
 
-    public static String runCat(String args) {
+    public static void runCat(String args) {
         if (args.isEmpty()) {
             System.err.println("cat: missing operand");
-            return null;
+            return;
         }
     
         StringBuilder combinedOutput = new StringBuilder();
@@ -82,13 +83,11 @@ public class Builtins {
     
             } catch (NoSuchFileException e) {
                 // STDERR should NOT be redirected
-                System.err.println("cat: " + file + ": No such file or directory");
+                System.out.println("cat: " + file + ": No such file or directory");
             } catch (Exception e) {
-                System.err.println("cat: " + file + ": Error reading file");
+                System.out.println("cat: " + file + ": Error reading file");
             }
         }
-    
-        return combinedOutput.toString();
     }
 
     public static boolean handleRedirection(String line) {
@@ -127,29 +126,72 @@ public class Builtins {
         return true;
     }
 
-    public static File[] runLs(String args) {
-        
-        if (args.isEmpty()) {
-            File[] files = currentDir.listFiles();
-            if (files != null) {
-                listFiles(files);
-                return files;
-            } else {
-                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
-            }
-        } else {
-            File givenDir = new File(args);
-            if (givenDir.exists()) {
-                File[] files = givenDir.listFiles();
-                listFiles(files);
-                return files;
-            } else {
-                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
-            }
+    public static void runLs(String args) {
+        String[] parts = args.split("\\s+");
+        List<String> flags = new ArrayList<>();
+        List<String> paths = new ArrayList<>();
+
+        for (String p: parts) {
+            if (p.startsWith("-")) flags.add(p);
+            else paths.add(p);
         }
 
-        return null;
+        if (paths.isEmpty()) {
+            paths.add(".");
+        }
+
+        // list each path with the provided flags
+        for (String path: paths) {
+            listPath(path, flags);
+        }
     }
+
+    private static void listPath(String pathStr, List<String> flags) {
+        Path p = Paths.get(pathStr);
+
+        if (!Files.exists(p)) {
+            System.err.println("ls: " + pathStr + ": No such file or directory");
+            return;
+        }
+
+        if (!Files.isDirectory(p)) {
+            System.out.println(pathStr);
+            return;
+        }
+
+        try {
+            Files.list(p)
+                .map(x -> x.getFileName().toString())
+                .sorted()
+                .forEach(System.out::println);
+        } catch (IOException e) {
+            System.err.println("ls: " + pathStr + ": Error reading directory");
+        }
+    }
+
+    // public static File[] runLs(String args) {
+        
+    //     if (args.isEmpty()) {
+    //         File[] files = currentDir.listFiles();
+    //         if (files != null) {
+    //             listFiles(files);
+    //             return files;
+    //         } else {
+    //             System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+    //         }
+    //     } else {
+    //         File givenDir = new File(args);
+    //         if (givenDir.exists()) {
+    //             File[] files = givenDir.listFiles();
+    //             listFiles(files);
+    //             return files;
+    //         } else {
+    //             System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+    //         }
+    //     }
+
+    //     return null;
+    // }
 
     public static void listFiles(File[] files) {
         for (File file : files) {
