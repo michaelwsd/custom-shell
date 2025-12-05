@@ -13,7 +13,7 @@ import java.util.List;
 public class Builtins {
 
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static File homeDir = new File(System.getProperty("user.home"));
+    private static File homeDir = new File(System.getenv("HOME"));
     private static List<String> historyList = new ArrayList<>();
 
     // returns true if a builtin handled the line
@@ -33,7 +33,7 @@ public class Builtins {
                 System.exit(0);
             }
             case echo -> {
-                System.out.println(args.replace("'", ""));
+                runEcho(args);
             }
             case pwd -> {
                 System.out.println(currentDir.getAbsolutePath());
@@ -59,6 +59,13 @@ public class Builtins {
         }
 
         return true; 
+    }
+
+    public static void runEcho(String args) {
+        args = args.replace("'", "");
+        args = args.replace("\"", "");
+
+        System.out.println(args);
     }
 
     public static void runCat(String args) {
