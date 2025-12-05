@@ -38,14 +38,18 @@ To start the shell locally, use the provided script:
 Once the shell is running, you can execute commands as you would in a traditional shell. For example:
 
 ```sh
-$ echo Hello, World!
-Hello, World!
-
+$ echo hello world
+hello world
 $ pwd
 /home/user
-
 $ ls
-file1.txt  file2.txt
+file1.txt
+file2.txt
+$ history
+    1  echo hello world
+    2  pwd
+    3  ls
+    4  history
 ```
 
 ## Project Structure
