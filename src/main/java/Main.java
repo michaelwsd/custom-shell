@@ -11,7 +11,8 @@ public class Main {
             String line = scanner.nextLine().strip();
 
             if (line.isEmpty()) continue;
-            if (Builtins.handleRedirection(line)) continue;
+            if (Builtins.handleRedirection(line, ">>")) continue;
+            if (Builtins.handleRedirection(line, ">")) continue;
 
             // check for command
             if (!Builtins.runCommand(line)) {

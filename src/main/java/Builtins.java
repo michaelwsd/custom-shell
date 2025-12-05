@@ -6,13 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Builtins {
 
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static File homeDir = new File(System.getenv("HOME"));
+    private static File homeDir = new File(System.getProperty("user.home"));
     private static List<String> historyList = new ArrayList<>();
 
     // returns true if a builtin handled the line
@@ -90,9 +91,8 @@ public class Builtins {
         }
     }
 
-    public static boolean handleRedirection(String line) {
-        String[] parts = line.split(">", 2);
-
+    public static boolean handleRedirection(String line, String regex) {
+        String[] parts = line.split(regex, 2);
         if (parts.length != 2) return false;
 
         String command = parts[0].trim(), fileName = parts[1].trim();
@@ -105,12 +105,12 @@ public class Builtins {
             command = command.substring(0, command.length()-1).trim();
         }
 
-        redirectOutput(chosenStream, command, type, outputFile);
+        redirectOutput(chosenStream, command, type, outputFile, regex);
 
         return true;
     }
 
-    public static void redirectOutput(PrintStream output, String command, OutputType type, File outputFile) {
+    public static void redirectOutput(PrintStream output, String command, OutputType type, File outputFile, String regex) {
         // create a temp buffer to store output
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
@@ -140,7 +140,8 @@ public class Builtins {
 
         // write to file
         try {
-            Files.write(outputFile.toPath(), buffer.toByteArray());
+            if (regex.equals(">")) Files.write(outputFile.toPath(), buffer.toByteArray());
+            else if (regex.equals(">>")) Files.write(outputFile.toPath(), buffer.toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (Exception e) {
             System.err.println("redirection error: " + e.getMessage());
         }
