@@ -198,8 +198,9 @@ public class Builtins {
             else paths.add(p);
         }
 
-        if (paths.isEmpty()) {
-            paths.add(".");
+        if (paths.isEmpty() || (paths.size() == 1 && paths.get(0).isEmpty())) {
+            paths.clear(); // remove the empty string
+            paths.add(currentDir.getAbsolutePath());
         }
 
         // list each path with the provided flags
