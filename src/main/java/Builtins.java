@@ -132,7 +132,7 @@ public class Builtins {
                 listFiles(files);
                 return files;
             } else {
-                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+                System.err.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
             }
         } else {
             File givenDir = new File(args);
@@ -141,7 +141,7 @@ public class Builtins {
                 listFiles(files);
                 return files;
             } else {
-                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+                System.err.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
             }
         }
 
