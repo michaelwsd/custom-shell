@@ -52,9 +52,9 @@ public class Builtins {
             case clear -> {
                 Main.clearScreen();
             }
-            // case cat -> {
-            //     runCat(args);
-            // }
+            case cat -> {
+                runCat(args);
+            }
         }
 
         return true; 
@@ -222,6 +222,10 @@ public class Builtins {
     }
 
     public static void runType(String cmd) {
+        if (cmd == "cat") {
+            System.out.println("cat is /bin/cat");
+        }
+        
         CommandName command = CommandName.of(cmd);
         if (command != null) {
             System.out.println(cmd + " is a shell builtin");
